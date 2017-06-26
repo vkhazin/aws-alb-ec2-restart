@@ -14,9 +14,15 @@ def getAlbStatus(arn):
         arn,
     ]
   )
-  return response
 
-res = getAlbStatus("arn:aws:elasticloadbalancing:us-east-2:811322200214:loadbalancer/app/smith-poc-nodejs-restart-alb/8aea219e2c2c6eb3")
+  lbs = response['LoadBalancers']
+  
+  filteredLbs = filter(
+    lambda lb: lb['LoadBalancerArn'] == arn, 
+    lbs
+  )
 
-print res
+  lb = iter(filteredLbs).next()
+  state = lb['State']['Code']
 
+  return state
