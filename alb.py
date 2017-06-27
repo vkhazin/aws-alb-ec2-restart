@@ -16,7 +16,6 @@ def getAlbStatus(arn):
   )
 
   lbs = response['LoadBalancers']
-  
   filteredLbs = filter(
     lambda lb: lb['LoadBalancerArn'] == arn, 
     lbs
