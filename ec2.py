@@ -32,7 +32,17 @@ def getStatus(id):
   return state
 
 def reboot(id):
+  print('Rebooting instance: ' + id)
   response = client.reboot_instances(
+    InstanceIds=[
+      id      
+    ]
+  )
+  return response
+
+def start(id):
+  print('Starting instance: ' + id)
+  response = client.start_instances(
     InstanceIds=[
       id      
     ]

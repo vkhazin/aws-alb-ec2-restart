@@ -22,6 +22,6 @@ def getStatus(arn):
   )
 
   lb = iter(filteredLbs).next()
-  state = lb['State']['Code']
+  state = lb
 
   return state
