@@ -8,14 +8,28 @@ client = boto3.client(
     aws_secret_access_key=os.environ['AWS_SECRET_ACCESS_KEY']
 )
 
-def getStatus(id):
-  response = client.describe_instance_status(
+def getDetails(id):
+  response = client.describe_instances(
     InstanceIds=[
       id
     ]
   )
-  details = response
-  return response
+  reservations = response['Reservations']
+  instances = iter(reservations).next()['Instances']
+  instance = iter(instances).next()
+  return instance
+
+def getStatus(id):
+  response = client.describe_instance_status(
+    InstanceIds=[
+      id
+    ],
+    IncludeAllInstances=True
+  )
+  statuses = response['InstanceStatuses']
+  status = iter(statuses).next()
+  state = status['InstanceState']
+  return state
 
 def reboot(id):
   response = client.reboot_instances(

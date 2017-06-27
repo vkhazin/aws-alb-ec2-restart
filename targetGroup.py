@@ -19,12 +19,4 @@ def getHealth(groupArn):
   response = client.describe_target_health(
     TargetGroupArn=groupArn
   )
-
-
-  for tgd in response['TargetHealthDescriptions']:
-    targetHealth = tgd['TargetHealth']
-    state = targetHealth['State']
-    # 'State': 'initial'|'healthy'|'unhealthy'|'unused'|'draining',
-    # if state == 'unused':
-
   return response['TargetHealthDescriptions']

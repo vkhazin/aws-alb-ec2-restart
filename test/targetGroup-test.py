@@ -3,7 +3,7 @@ import sys
 import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-import targetGroup
+import targetGroup as targetGroupApi
 import ec2
 
 alb_arn='arn:aws:elasticloadbalancing:us-east-2:811322200214:loadbalancer/app/smith-poc-nodejs-restart-alb/8aea219e2c2c6eb3'
@@ -11,19 +11,15 @@ alb_arn='arn:aws:elasticloadbalancing:us-east-2:811322200214:loadbalancer/app/sm
 class TargetGroupTests(unittest.TestCase):
 
   def testGetAlbTargetGroups(self):
-    targetGroups = targetGroup.getAlbTargetGroups(alb_arn)
-    print targetGroups
-    # for tg in targetGroups['TargetGroups']:
-      
-    #   arn = tg['TargetGroupArn']
-    #   tgHealthDescs = targetGroup.getHealth(arn)
-
-    #   self.assertGreater(len(tgHealthDescs), 0)
-      # for tgd in tgHealthDescs:
-      #   targetHealth = tgd['TargetHealth']
-      #   state = targetHealth['State']
-        # 'State': 'initial'|'healthy'|'unhealthy'|'unused'|'draining',
-        # if state == 'unused':
+    targetGroups = targetGroupApi.getAlbTargetGroups(alb_arn)
+    self.assertGreater(len(targetGroups), 0)
+    
+    for targetGroup in targetGroups:
+      groupArn = targetGroup['TargetGroupArn']
+      groupHealth = targetGroupApi.getHealth(groupArn)
+      for targetHealth in groupHealth:
+        print targetHealth
+        self.assertGreater(len(targetHealth), 0)
 
 def main():
   unittest.main()

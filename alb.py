@@ -8,7 +8,7 @@ client = boto3.client(
     aws_secret_access_key=os.environ['AWS_SECRET_ACCESS_KEY']
 )
 
-def getAlbStatus(arn):
+def getStatus(arn):
   response = client.describe_load_balancers(
     LoadBalancerArns=[
         arn,
