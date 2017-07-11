@@ -66,7 +66,7 @@
 ```
 * For each target group in dimension extract target groupArn suffix to build full arn:
 'arn:aws:elasticloadbalancing:{AWS_REGION}:{AWS_ACCOUNT_NUMBER}:{arnSuffix}'
-* Call Aws Api to collect targets health for each target group ```describe_target_health``` does not accept multiple group arns
+* Call Aws Api to collect targets health for each target group as ```describe_target_health``` does not accept multiple group arns
 * Payload returned:
 ```
 [  
