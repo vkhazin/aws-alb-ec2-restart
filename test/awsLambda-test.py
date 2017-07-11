@@ -34,10 +34,26 @@ class AwsLambdaTests(unittest.TestCase):
   
   def testParseEvent(self):
     event = json.loads(eventString)
-    snsMessage = awsLambda.parseEvent(event)
-    print snsMessage
-    self.assertIsNotNone(snsMessage)
+    snsMessages = awsLambda.parseEvent(event)
+    self.assertNotEqual(len(snsMessages), 0)
 
+  def testFindUnhealthyTargetGroups(self):
+    event = json.loads(eventString)
+    snsMessages = awsLambda.parseEvent(event)
+    unhealthyTargetGroups = awsLambda.findUnhealthyTargetGroups(snsMessages)
+    self.assertNotEqual(len(unhealthyTargetGroups), 0)
+  
+  def testFindUnhealthyTargets(self):
+    event = json.loads(eventString)
+    snsMessages = awsLambda.parseEvent(event)
+    unhealthyTargetGroups = awsLambda.findUnhealthyTargetGroups(snsMessages)
+    unhealthyTargets = awsLambda.findUnhealthyTargets(unhealthyTargetGroups)
+    self.assertNotEqual(len(unhealthyTargetGroups), 0)
+    
+  def testLambdaHandler(self):
+    event = json.loads(eventString)
+    awsLambda.lambda_handler(event, None)
+  
 def main():
   unittest.main()
 

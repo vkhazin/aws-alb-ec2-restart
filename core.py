@@ -72,4 +72,3 @@ def reviveInstances(status):
           ec2Api.reboot(instanceId)
         elif instanceState == 'stopped':
           ec2Api.start(instanceId)
-
