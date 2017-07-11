@@ -1,6 +1,7 @@
 # Alb Recovery #
 
 ## Flow ##
+![Flow](./media/aws-alb-health.jpg)
 * CloudWatch configured to send SNS notification when unhealthy targets count > 0
 * SNS Notification is sent to Lambda
 * SNS Content:
