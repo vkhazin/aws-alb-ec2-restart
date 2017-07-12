@@ -1,7 +1,6 @@
 # Alb Recovery #
 
 ## Flow ##
-<iframe frameborder="0" style="width:100%" src="https://www.draw.io/?lightbox=1&highlight=0000ff&nav=1&title=aws-alb-health.io#Uhttps%3A%2F%2Fdrive.google.com%2Fa%2Ficssolutions.ca%2Fuc%3Fid%3D0BzVXruaTwGflaDZqT0JVTEFHS1U%26export%3Ddownload"></iframe>
 
 * CloudWatch configured to send SNS notification when unhealthy hosts count > 0:
 ![Flow](./media/cloud-watch-alarm.png)
