@@ -2,9 +2,11 @@
 
 ## Flow ##
 ![Flow](./media/aws-alb-health.jpg)
-* CloudWatch configured to send SNS notification when unhealthy targets count > 0
-* SNS Notification is sent to Lambda
-* SNS Content:
+* CloudWatch configured to send SNS notification when unhealthy hosts count > 0:
+![Flow](./media/cloud-watch-alarm.png)
+* Important to set **Statisic** to ```Maximum``` rather than ```Average```
+* SNS Notification is sent to Lambda by configuring Lambda Trigger 
+* SNS Content received by Lambda in event parameter:
 ```
 {
   "Records": [
@@ -98,11 +100,7 @@
 
 
 ```
-* Collect unhealthy/unused targets
-* Possible target states:
-```
-'State': 'initial'|'healthy'|'unhealthy'|'unused'|'draining'
-```
+* Collect unhealthy/unused targets, possible target states: ```'initial'|'healthy'|'unhealthy'|'unused'|'draining'```
 * Assemble list of unhealthy target groups with their targets:
 ```
 [  
@@ -137,4 +135,4 @@
   }
 ]
 ```
-* Now is what to do about every unhealthy target?
+* Using payload assembled from previous steps recycle unhealthy targets: HOW?
