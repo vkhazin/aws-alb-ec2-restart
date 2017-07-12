@@ -1,6 +1,27 @@
 import json
 import targetGroup as targetGroupApi
 import os
+import boto3
+
+# client = boto3.client(
+#     'sts', 
+#     region_name=os.environ['AWS_REGION'],
+#     aws_access_key_id=os.environ['AWS_ACCESS_KEY_ID'],
+#     aws_secret_access_key=os.environ['AWS_SECRET_ACCESS_KEY']
+# )
+# accountId = os.environ['AWS_ACCOUNT_NUMBER']
+
+client = boto3.client(
+    'sts'
+)
+accountId = None
+
+def getAccountId():
+  global accountId
+  if accountId is None:
+    print 'Getting AccountId using Aws Api'
+    accountId = client.get_caller_identity()["Account"]
+  return accountId
 
 def parseEvent(event):
   return map(lambda record: json.loads(record['Sns']['Message']), event['Records'])
@@ -18,7 +39,7 @@ def findUnhealthyTargets(targetGroups):
   for targetGroup in targetGroups:
     arnSuffix = targetGroup['value']
     arn='arn:aws:elasticloadbalancing:{AWS_REGION}:{AWS_ACCOUNT_NUMBER}:{arnSuffix}' \
-        .format(AWS_REGION=os.environ['AWS_REGION'], AWS_ACCOUNT_NUMBER=os.environ['AWS_ACCOUNT_NUMBER'],arnSuffix=arnSuffix)
+        .format(AWS_REGION=os.environ['AWS_REGION'], AWS_ACCOUNT_NUMBER=getAccountId(),arnSuffix=arnSuffix)
     targetGroupHealth=targetGroupApi.getHealth(arn)
     # 'State': 'initial'|'healthy'|'unhealthy'|'unused'|'draining'
     unhealtyTargets = [unhealtyTarget for unhealtyTarget in targetGroupHealth if unhealtyTarget['TargetHealth']['State'] in ['unused', 'unhealthy']]
@@ -26,7 +47,7 @@ def findUnhealthyTargets(targetGroups):
 
   return targetGroups
 
-def lambda_handler(event, context): 
+def handler(event, context): 
   snsMessages = parseEvent(event)
   unhealthyTargetGroups = findUnhealthyTargetGroups(snsMessages)
   unhealthyTargets = findUnhealthyTargets(unhealthyTargetGroups)

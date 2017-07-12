@@ -32,6 +32,10 @@ eventString = """{
 }"""
 class AwsLambdaTests(unittest.TestCase):
   
+  def testGetAccountId(self):
+    accountId = awsLambda.getAccountId()
+    self.assertNotEqual(accountId, None)
+    
   def testParseEvent(self):
     event = json.loads(eventString)
     snsMessages = awsLambda.parseEvent(event)
@@ -50,9 +54,9 @@ class AwsLambdaTests(unittest.TestCase):
     unhealthyTargets = awsLambda.findUnhealthyTargets(unhealthyTargetGroups)
     self.assertNotEqual(len(unhealthyTargetGroups), 0)
     
-  def testLambdaHandler(self):
+  def testHandler(self):
     event = json.loads(eventString)
-    awsLambda.lambda_handler(event, None)
+    awsLambda.handler(event, None)
   
 def main():
   unittest.main()
