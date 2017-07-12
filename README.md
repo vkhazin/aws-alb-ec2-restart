@@ -2,8 +2,10 @@
 
 ## Flow ##
 
+![Flow](./media/aws-alb-health.io.png)
+
 * CloudWatch configured to send SNS notification when unhealthy hosts count > 0:
-![Flow](./media/cloud-watch-alarm.png)
+![Alarm](./media/cloud-watch-alarm.png)
 * Important to set **Statistic** to ```Maximum``` rather than to ```Average```
 * SNS Notification is sent to Lambda by configuring Lambda Trigger 
 * SNS Content received by Lambda in event parameter:
