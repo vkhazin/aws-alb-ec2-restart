@@ -16,6 +16,10 @@ class ec2Tests(unittest.TestCase):
   def testGetStatus(self):
     ec2 = ec2Api.getStatus(ec2_id)
     self.assertIsNotNone(ec2)
+    
+  def testGetInstanceId(self):
+    instanceId = ec2Api.getInstanceId()
+    self.assertIsNotNone(instanceId)
 
 def main():
   unittest.main()

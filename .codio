@@ -4,7 +4,8 @@
 // Run button configuration
   "commands": {
     "awsLambda-test": "clear && python ./test/awsLambda-test.py",
-    "targetGroup-test": "clear && python ./test/targetGroup-test.py"
+    "targetGroup-test": "clear && python ./test/targetGroup-test.py",
+    "ec2-test": "clear && python ./test/ec2-test.py"
   },
 
 // Preview button configuration

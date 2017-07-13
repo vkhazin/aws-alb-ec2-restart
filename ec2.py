@@ -1,5 +1,6 @@
 import os
 import boto3
+import requests
 
 # client = boto3.client(
 #     'ec2', 
@@ -51,3 +52,8 @@ def start(id):
     ]
   )
   return response
+
+def getInstanceId():
+  response = requests.get('http://169.254.169.254/latest/meta-data/instance-id')
+  instanceId = response.text
+  return instanceId
