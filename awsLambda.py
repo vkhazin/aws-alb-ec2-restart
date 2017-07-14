@@ -70,7 +70,7 @@ def handler(event, context):
   snsMessages = parseEvent(event)
   unhealthyTargetGroups = findUnhealthyTargetGroups(snsMessages)
   unhealthyTargets = findUnhealthyTargets(unhealthyTargetGroups)
-  print unhealthyTargets
+  print(json.dumps(unhealthyTargets))
   restartUnhealthyServices(unhealthyTargets)
   return unhealthyTargets
   
