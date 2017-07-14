@@ -49,13 +49,14 @@ def restartUnhealthyServices(unhealtyTargetGroups):
   for unhealthyTargetGroup in unhealtyTargetGroups:
     for unhealtyTarget in unhealthyTargetGroup['UnhealthyTargets']:
       instanceIds.append(unhealtyTarget['Target']['Id'])
-      if len(instanceIds) > 0:
-        tags = unhealthyTargetGroup['Tags']
-        filteredTags = [tag for tag in tags if tag['Key'] == 'service-name']
-        if (len(filteredTags) > 0):
-          serviceName = filteredTags[0]['Value']
-          print 'Restarting unhealty targets: ' + ",".join(instanceIds) + ', service name: ' + serviceName
-          ssmApi.restartService(instanceIds, serviceName)
+      
+    if len(instanceIds) > 0:
+      tags = unhealthyTargetGroup['Tags']
+      filteredTags = [tag for tag in tags if tag['Key'] == 'service-name']
+      if (len(filteredTags) > 0):
+        serviceName = filteredTags[0]['Value']
+        print 'Restarting unhealty targets: ' + ",".join(instanceIds) + ', service name: ' + serviceName
+        ssmApi.restartService(instanceIds, serviceName)
   
 def handler(event, context): 
   snsMessages = parseEvent(event)
