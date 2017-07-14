@@ -22,14 +22,19 @@ class TargetGroupTests(unittest.TestCase):
 #         print targetHealth
 #         self.assertGreater(len(targetHealth), 0)
         
-  def testGetHealth(self):
-    groupHealth = targetGroupApi.getHealth(tg_arn)
-    print 'groupHealth'
-    print groupHealth
-    for targetHealth in groupHealth:
+#   def testGetHealth(self):
+#     groupHealth = targetGroupApi.getHealth(tg_arn)
+#     print groupHealth
+#     for targetHealth in groupHealth:
 #       print targetHealth
-      self.assertGreater(len(targetHealth), 0)
-
+#       self.assertGreater(len(targetHealth), 0)
+  
+  def testGetTags(self):
+    groupTags = targetGroupApi.getTags(tg_arn)
+    print groupTags
+    self.assertGreater(len(groupTags), 0)
+      
+      
 def main():
   unittest.main()
 

@@ -137,4 +137,40 @@
   }
 ]
 ```
-* Using payload assembled from previous steps recycle unhealthy targets: HOW?
+* Using payload assembled from previous steps recycle execute send-command to each instance to restart service
+* [SSM Role for EC2 Instances](http://docs.aws.amazon.com/systems-manager/latest/userguide/sysman-configuring-access-policies.html)
+* [Installing SSM Agent](http://docs.aws.amazon.com/systems-manager/latest/userguide/ssm-agent.html#sysman-install-ssm-agent)
+* To validate configuration run:
+```
+aws ssm describe-instance-information
+```
+* Ouput will list instances with SSM agent installed and IAM Roles configured:
+```
+cabox@box-codeanywhere:~/workspace$ aws ssm describe-instance-information
+	{
+		"InstanceInformationList": [
+			{
+				"IsLatestVersion": true,
+				"ComputerName": "ip-172-31-32-142.us-east-2.compute.internal",
+				"PingStatus": "Online",
+				"InstanceId": "i-0b314f9c31a99621c",
+				"IPAddress": "172.31.32.142",
+				"ResourceType": "EC2Instance",
+				"AgentVersion": "2.0.847.0",
+				"PlatformVersion": "7.2",
+				"PlatformName": "Red Hat Enterprise Linux Server",
+				"PlatformType": "Linux",
+				"LastPingDateTime": 1499986973.929
+			}
+		]
+	} 
+```
+* [Send Command walkthrough](http://docs.aws.amazon.com/systems-manager/latest/userguide/walkthrough-cli.html)
+* [Disable require tty](https://www.shell-tips.com/2014/09/08/sudo-sorry-you-must-have-a-tty-to-run-sudo/)
+* Test command:
+```
+aws ssm send-command --instance-ids "i-0b314f9c31a99621c" --document-name "AWS-RunShellScript" \
+--comment "IP config" --parameters "commands=ifconfig" --output text
+
+aws ec2 get-console-output --instance-id "i-0b314f9c31a99621c"
+```

@@ -24,3 +24,11 @@ def getHealth(groupArn):
     TargetGroupArn=groupArn
   )
   return response['TargetHealthDescriptions']
+
+def getTags(groupArn):
+  response = client.describe_tags(
+    ResourceArns=[
+        groupArn
+    ]
+  )
+  return response['TagDescriptions'][0]['Tags']

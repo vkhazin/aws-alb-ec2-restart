@@ -1,15 +1,8 @@
 import json
-import targetGroup as targetGroupApi
 import os
 import boto3
-
-# client = boto3.client(
-#     'sts', 
-#     region_name=os.environ['AWS_REGION'],
-#     aws_access_key_id=os.environ['AWS_ACCESS_KEY_ID'],
-#     aws_secret_access_key=os.environ['AWS_SECRET_ACCESS_KEY']
-# )
-# accountId = os.environ['AWS_ACCOUNT_NUMBER']
+import targetGroup as targetGroupApi
+import ssm as ssmApi
 
 client = boto3.client(
     'sts'
@@ -42,15 +35,33 @@ def findUnhealthyTargets(targetGroups):
         .format(AWS_REGION=os.environ['AWS_REGION'], AWS_ACCOUNT_NUMBER=getAccountId(),arnSuffix=arnSuffix)
     targetGroupHealth=targetGroupApi.getHealth(arn)
     # 'State': 'initial'|'healthy'|'unhealthy'|'unused'|'draining'
-    unhealtyTargets = [unhealtyTarget for unhealtyTarget in targetGroupHealth if unhealtyTarget['TargetHealth']['State'] in ['unused', 'unhealthy']]
+    unhealtyTargets = [unhealtyTarget for unhealtyTarget in targetGroupHealth if unhealtyTarget['TargetHealth']['State'] in ['unhealthy']]
     targetGroup['UnhealthyTargets'] = unhealtyTargets
 
+    if (len(unhealtyTargets) > 0):
+      tags = targetGroupApi.getTags(arn)
+      targetGroup['Tags'] = tags
+      
   return targetGroups
 
+def restartUnhealthyServices(unhealtyTargetGroups):
+  instanceIds = []
+  for unhealthyTargetGroup in unhealtyTargetGroups:
+    for unhealtyTarget in unhealthyTargetGroup['UnhealthyTargets']:
+      instanceIds.append(unhealtyTarget['Target']['Id'])
+      if len(instanceIds) > 0:
+        tags = unhealthyTargetGroup['Tags']
+        filteredTags = [tag for tag in tags if tag['Key'] == 'service-name']
+        if (len(filteredTags) > 0):
+          serviceName = filteredTags[0]['Value']
+          print 'Restarting unhealty targets: ' + ",".join(instanceIds) + ', service name: ' + serviceName
+          ssmApi.restartService(instanceIds, serviceName)
+  
 def handler(event, context): 
   snsMessages = parseEvent(event)
   unhealthyTargetGroups = findUnhealthyTargetGroups(snsMessages)
   unhealthyTargets = findUnhealthyTargets(unhealthyTargetGroups)
   print unhealthyTargets
+  restartUnhealthyServices(unhealthyTargets)
   return unhealthyTargets
   

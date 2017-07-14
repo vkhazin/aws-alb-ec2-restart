@@ -6,6 +6,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 import ec2 as ec2Api
 
 ec2_id='i-0b314f9c31a99621c'
+serviceName='nodejs-restart'
 
 class ec2Tests(unittest.TestCase):
 
@@ -20,7 +21,7 @@ class ec2Tests(unittest.TestCase):
   def testGetInstanceId(self):
     instanceId = ec2Api.getInstanceId()
     self.assertIsNotNone(instanceId)
-
+    
 def main():
   unittest.main()
 
