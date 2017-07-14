@@ -33,3 +33,7 @@ def sendCommand(instanceIds, command):
 def restartService(instanceIds, serviceName):
   command = 'sudo service {serviceName} restart'.format(serviceName=serviceName)
   return sendCommand(instanceIds, command)
+
+def killProcessByPortNumber(instanceIds, portNumber):
+  command = "sudo kill $(sudo ss -lptn 'sport = :{portNumber}' | grep '(?<=pid=)(\d*)(?=,)' -Po)".format(portNumber=portNumber)
+  return sendCommand(instanceIds, command)

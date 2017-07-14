@@ -99,14 +99,12 @@
     }
   }
 ]
-
-
 ```
 * Collect unhealthy/unused targets, possible target states: ```'initial'|'healthy'|'unhealthy'|'unused'|'draining'```
 * Assemble list of unhealthy target groups with their targets:
 ```
 [  
-	{  
+  {  
 		"UnhealthyTargets":[  
 			 {  
 					"HealthCheckPort":"3000",
@@ -186,4 +184,8 @@ aws ec2 get-console-output --instance-id "i-0b314f9c31a99621c"
 * Add 'service-name' tag to target group to identify what service to restart on ec2 instance(s) using:
 ```
 sudo service service-name restart
+```
+* Get PID from port and kill the process, service will restart as a better approach?
+```
+sudo kill $(sudo ss -lptn 'sport = :3000' | grep '(?<=pid=)(\d*)(?=,)' -Po)
 ```

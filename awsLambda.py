@@ -47,16 +47,24 @@ def findUnhealthyTargets(targetGroups):
 def restartUnhealthyServices(unhealtyTargetGroups):
   instanceIds = []
   for unhealthyTargetGroup in unhealtyTargetGroups:
+    portNumber = None
     for unhealtyTarget in unhealthyTargetGroup['UnhealthyTargets']:
       instanceIds.append(unhealtyTarget['Target']['Id'])
+      portNumber = unhealtyTarget['HealthCheckPort']
       
-    if len(instanceIds) > 0:
-      tags = unhealthyTargetGroup['Tags']
-      filteredTags = [tag for tag in tags if tag['Key'] == 'service-name']
-      if (len(filteredTags) > 0):
-        serviceName = filteredTags[0]['Value']
-        print 'Restarting unhealty targets: ' + ",".join(instanceIds) + ', service name: ' + serviceName
-        ssmApi.restartService(instanceIds, serviceName)
+    # Port based approach
+    if (len(instanceIds) > 0):
+      print 'Restarting unhealty targets: ' + ",".join(instanceIds) + ', port number: ' + portNumber
+      ssmApi.killProcessByPortNumber(instanceIds, portNumber)
+      
+    # Tags based approach      
+#     if len(instanceIds) > 0:
+#       tags = unhealthyTargetGroup['Tags']
+#       filteredTags = [tag for tag in tags if tag['Key'] == 'service-name']
+#       if (len(filteredTags) > 0):
+#         serviceName = filteredTags[0]['Value']
+#         print 'Restarting unhealty targets: ' + ",".join(instanceIds) + ', service name: ' + serviceName
+#         ssmApi.restartService(instanceIds, serviceName)
   
 def handler(event, context): 
   snsMessages = parseEvent(event)
