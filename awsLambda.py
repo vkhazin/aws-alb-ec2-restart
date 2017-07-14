@@ -20,12 +20,12 @@ def parseEvent(event):
   return map(lambda record: json.loads(record['Sns']['Message']), event['Records'])
 
 def findUnhealthyTargetGroups(snsMessages):
-  unhealtyTargetGroups = []
+  unhealthyTargetGroups = []
   for snsMessage in snsMessages:
     dimensions = snsMessage['Trigger']['Dimensions']
     targetGroups = [dimension for dimension in dimensions if dimension['name'] == 'TargetGroup']
-    unhealtyTargetGroups.extend(targetGroups)
-  return unhealtyTargetGroups
+    unhealthyTargetGroups.extend(targetGroups)
+  return unhealthyTargetGroups
 
 def findUnhealthyTargets(targetGroups):
 # [{u'name': u'TargetGroup', u'value': u'targetgroup/smith-poc-nodejs-restart-tg/7c25fe0e5ca71022'}]
@@ -35,26 +35,26 @@ def findUnhealthyTargets(targetGroups):
         .format(AWS_REGION=os.environ['AWS_REGION'], AWS_ACCOUNT_NUMBER=getAccountId(),arnSuffix=arnSuffix)
     targetGroupHealth=targetGroupApi.getHealth(arn)
     # 'State': 'initial'|'healthy'|'unhealthy'|'unused'|'draining'
-    unhealtyTargets = [unhealtyTarget for unhealtyTarget in targetGroupHealth if unhealtyTarget['TargetHealth']['State'] in ['unhealthy']]
-    targetGroup['UnhealthyTargets'] = unhealtyTargets
+    unhealthyTargets = [unhealthyTarget for unhealthyTarget in targetGroupHealth if unhealthyTarget['TargetHealth']['State'] in ['unhealthy']]
+    targetGroup['UnhealthyTargets'] = unhealthyTargets
 
-    if (len(unhealtyTargets) > 0):
+    if (len(unhealthyTargets) > 0):
       tags = targetGroupApi.getTags(arn)
       targetGroup['Tags'] = tags
       
   return targetGroups
 
-def restartUnhealthyServices(unhealtyTargetGroups):
+def restartUnhealthyServices(unhealthyTargetGroups):
   instanceIds = []
-  for unhealthyTargetGroup in unhealtyTargetGroups:
+  for unhealthyTargetGroup in unhealthyTargetGroups:
     portNumber = None
-    for unhealtyTarget in unhealthyTargetGroup['UnhealthyTargets']:
-      instanceIds.append(unhealtyTarget['Target']['Id'])
-      portNumber = unhealtyTarget['HealthCheckPort']
+    for unhealthyTarget in unhealthyTargetGroup['UnhealthyTargets']:
+      instanceIds.append(unhealthyTarget['Target']['Id'])
+      portNumber = unhealthyTarget['HealthCheckPort']
       
     # Port based approach
     if (len(instanceIds) > 0):
-      print 'Restarting unhealty targets: ' + ",".join(instanceIds) + ', port number: ' + portNumber
+      print 'Restarting unhealthy targets: ' + ",".join(instanceIds) + ', port number: ' + portNumber
       ssmApi.killProcessByPortNumber(instanceIds, portNumber)
       
     # Tags based approach      
@@ -63,7 +63,7 @@ def restartUnhealthyServices(unhealtyTargetGroups):
 #       filteredTags = [tag for tag in tags if tag['Key'] == 'service-name']
 #       if (len(filteredTags) > 0):
 #         serviceName = filteredTags[0]['Value']
-#         print 'Restarting unhealty targets: ' + ",".join(instanceIds) + ', service name: ' + serviceName
+#         print 'Restarting unhealthy targets: ' + ",".join(instanceIds) + ', service name: ' + serviceName
 #         ssmApi.restartService(instanceIds, serviceName)
   
 def handler(event, context): 
