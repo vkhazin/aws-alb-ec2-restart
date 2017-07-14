@@ -57,7 +57,8 @@ def restartUnhealthyServices(unhealthyTargetGroups):
     if (len(instanceIds) > 0):
       print 'Restarting unhealthy targets: ' + ",".join(instanceIds) + ', port number: ' + portNumber
       ssmApi.killProcessByPortNumber(instanceIds, portNumber)
-      
+    else:
+      raise ValueError('Could not find any unhealthy targets to restart!')
     # Tags based approach      
 #     if len(instanceIds) > 0:
 #       tags = unhealthyTargetGroup['Tags']
