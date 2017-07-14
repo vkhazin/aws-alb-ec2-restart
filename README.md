@@ -174,3 +174,7 @@ aws ssm send-command --instance-ids "i-0b314f9c31a99621c" --document-name "AWS-R
 
 aws ec2 get-console-output --instance-id "i-0b314f9c31a99621c"
 ```
+* Add 'service-name' tag to target group to identify what service to restart on ec2 instance(s) using:
+```
+sudo service service-name restart
+```
