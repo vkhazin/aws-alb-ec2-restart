@@ -37,10 +37,11 @@ def findUnhealthyTargets(targetGroups):
     # 'State': 'initial'|'healthy'|'unhealthy'|'unused'|'draining'
     unhealthyTargets = [unhealthyTarget for unhealthyTarget in targetGroupHealth if unhealthyTarget['TargetHealth']['State'] in ['unhealthy']]
     targetGroup['UnhealthyTargets'] = unhealthyTargets
-
-    if (len(unhealthyTargets) > 0):
-      tags = targetGroupApi.getTags(arn)
-      targetGroup['Tags'] = tags
+    
+    # No more in use
+#     if (len(unhealthyTargets) > 0):
+#       tags = targetGroupApi.getTags(arn)
+#       targetGroup['Tags'] = tags
       
   return targetGroups
 
