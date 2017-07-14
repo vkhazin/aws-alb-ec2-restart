@@ -106,35 +106,42 @@
 * Assemble list of unhealthy target groups with their targets:
 ```
 [  
-  {  
-    "UnhealthyTargets":[  
-      {  
-        "HealthCheckPort":"3000",
-        "Target":{  
-          "Id":"i-019ebfaf92631c228",
-          "Port":3000
-        },
-        "TargetHealth":{  
-          "State":"unhealthy",
-          "Reason":"Target.ResponseCodeMismatch",
-          "Description":"Health checks failed with these codes: [500]"
-        }
-      },
-      {  
-        "Target":{  
-          "Id":"i-0b314f9c31a99621c",
-          "Port":3000
-        },
-        "TargetHealth":{  
-          "State":"unused",
-          "Reason":"Target.InvalidState",
-          "Description":"Target is in the stopped state"
-        }
-      }
-    ],
-    "name":"TargetGroup",
-    "value":"targetgroup/smith-poc-nodejs-restart-tg/7c25fe0e5ca71022"
-  }
+	{  
+		"UnhealthyTargets":[  
+			 {  
+					"HealthCheckPort":"3000",
+					"Target":{  
+						 "Id":"i-019ebfaf92631c228",
+						 "Port":3000
+					},
+					"TargetHealth":{  
+						 "State":"unhealthy",
+						 "Reason":"Target.ResponseCodeMismatch",
+						 "Description":"Health checks failed with these codes: [500]"
+					}
+			 },
+			 {  
+					"HealthCheckPort":"3000",
+					"Target":{  
+						 "Id":"i-0b314f9c31a99621c",
+						 "Port":3000
+					},
+					"TargetHealth":{  
+						 "State":"unhealthy",
+						 "Reason":"Target.ResponseCodeMismatch",
+						 "Description":"Health checks failed with these codes: [500]"
+					}
+			 }
+		],
+		"name":"TargetGroup",
+		"value":"targetgroup/smith-poc-nodejs-restart-tg/7c25fe0e5ca71022",
+		"Tags":[  
+			 {  
+					"Value":"nodejs-restart",
+					"Key":"service-name"
+			 }
+		]
+	}
 ]
 ```
 * Using payload assembled from previous steps recycle execute send-command to each instance to restart service
