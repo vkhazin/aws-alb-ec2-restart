@@ -139,6 +139,8 @@
 ```
 * Using payload assembled from previous steps recycle execute send-command to each instance to restart service
 * [SSM Role for EC2 Instances](http://docs.aws.amazon.com/systems-manager/latest/userguide/sysman-configuring-access-policies.html)
+* EC2 Instances Role must include: AmazonEC2RoleforSSM policy
+* Lambda Exceution Role must include:  AmazonEC2FullAccess, CloudWatchLogsFullAccess, CloudWatchLogsForLambda, AmazonSSMFullAccess, CloudWatchEventsFullAccess policies
 * [Installing SSM Agent](http://docs.aws.amazon.com/systems-manager/latest/userguide/ssm-agent.html#sysman-install-ssm-agent)
 * To validate configuration run:
 ```
