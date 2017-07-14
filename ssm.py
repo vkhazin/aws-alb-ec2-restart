@@ -14,19 +14,6 @@ def sendCommand(instanceIds, command):
               command,
           ]
       }
-#       OutputS3Region='string',
-#       OutputS3BucketName='string',
-#       OutputS3KeyPrefix='string',
-#       MaxConcurrency='string',
-#       MaxErrors='string',
-#       ServiceRoleArn='string',
-#       NotificationConfig={
-#           'NotificationArn': 'string',
-#           'NotificationEvents': [
-#               'All'|'InProgress'|'Success'|'TimedOut'|'Cancelled'|'Failed',
-#           ],
-#           'NotificationType': 'Command'|'Invocation'
-#       }
   )  
   return response
 
