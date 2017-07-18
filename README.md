@@ -189,3 +189,7 @@ sudo service service-name restart
 ```
 sudo kill $(sudo ss -lptn 'sport = :3000' | grep '(?<=pid=)(\d*)(?=,)' -Po)
 ```
+* Edge cases:
+	* CloudWatch Alarm is triggered but heath group api does not return unhealthy targets - no actions can be taken and services won't be recycled
+	* One instance of service goes down, alarm is triggered, reset command is sent to that one instance, another instances goes down in parallel, alarm status never changed to OK and alarm is never triggered again
+* To deal with stuck 'ALARM' status - added call to aws cli to set alarm status to ok

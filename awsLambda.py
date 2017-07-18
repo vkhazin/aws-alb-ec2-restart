@@ -3,6 +3,9 @@ import os
 import boto3
 import targetGroup as targetGroupApi
 import ssm as ssmApi
+import cloudWatch as cloudWatchApi
+
+alarmNamesPrefix='awsapplicationelb-'
 
 client = boto3.client(
     'sts'
@@ -19,13 +22,18 @@ def getAccountId():
 def parseEvent(event):
   return map(lambda record: json.loads(record['Sns']['Message']), event['Records'])
 
-def findUnhealthyTargetGroups(snsMessages):
-  unhealthyTargetGroups = []
+def parseSnsMessages(snsMessages):
   for snsMessage in snsMessages:
+    alarmName = snsMessage['AlarmName']
+    unhealthyTargetGroups = []
     dimensions = snsMessage['Trigger']['Dimensions']
     targetGroups = [dimension for dimension in dimensions if dimension['name'] == 'TargetGroup']
     unhealthyTargetGroups.extend(targetGroups)
-  return unhealthyTargetGroups
+    yield {
+      'AlarmName': alarmName,
+      'TargetGroups': unhealthyTargetGroups
+    }
+#   return unhealthyTargetGroups
 
 def findUnhealthyTargets(targetGroups):
 # [{u'name': u'TargetGroup', u'value': u'targetgroup/smith-poc-nodejs-restart-tg/7c25fe0e5ca71022'}]
@@ -70,9 +78,12 @@ def restartUnhealthyServices(unhealthyTargetGroups):
   
 def handler(event, context): 
   snsMessages = parseEvent(event)
-  unhealthyTargetGroups = findUnhealthyTargetGroups(snsMessages)
-  unhealthyTargets = findUnhealthyTargets(unhealthyTargetGroups)
-  print(json.dumps(unhealthyTargets))
-  restartUnhealthyServices(unhealthyTargets)
+  for targetHealthGroup in parseSnsMessages(snsMessages):
+    unhealthyTargets = findUnhealthyTargets(targetHealthGroup['TargetGroups'])
+    print(json.dumps(unhealthyTargets))
+    restartUnhealthyServices(unhealthyTargets)
+    alarmName = targetHealthGroup['AlarmName'].replace(alarmNamesPrefix, '')
+    print('Resetting alarm: {alarmName}'.format(alarmName=alarmName))
+    cloudWatchApi.resetAlarmState(alarmName=alarmName)
   return unhealthyTargets
   
