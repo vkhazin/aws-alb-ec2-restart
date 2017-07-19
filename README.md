@@ -1,5 +1,13 @@
 # Alb Recovery #
 
+## Overview ##
+* Nodejs end-point with simulated failure: https://github.com/vkhazin/nodejs-restart
+* CloudWatch Alarm to monitor the Health Group
+* SNS notification sent by CloudWatch Alarm is processed by Lambda function
+* Lambda function leverages SSM to send kill command to unhealthy ec2 instances
+* And repeat the process
+* 
+
 ## Flow ##
 
 ![Flow](./media/aws-alb-health.io.png)
