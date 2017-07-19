@@ -33,7 +33,6 @@ def parseSnsMessages(snsMessages):
       'AlarmName': alarmName,
       'TargetGroups': unhealthyTargetGroups
     }
-#   return unhealthyTargetGroups
 
 def findUnhealthyTargets(targetGroups):
 # [{u'name': u'TargetGroup', u'value': u'targetgroup/smith-poc-nodejs-restart-tg/7c25fe0e5ca71022'}]
@@ -45,11 +44,6 @@ def findUnhealthyTargets(targetGroups):
     # 'State': 'initial'|'healthy'|'unhealthy'|'unused'|'draining'
     unhealthyTargets = [unhealthyTarget for unhealthyTarget in targetGroupHealth if unhealthyTarget['TargetHealth']['State'] in ['unhealthy']]
     targetGroup['UnhealthyTargets'] = unhealthyTargets
-    
-    # No more in use
-#     if (len(unhealthyTargets) > 0):
-#       tags = targetGroupApi.getTags(arn)
-#       targetGroup['Tags'] = tags
       
   return targetGroups
 
@@ -66,15 +60,7 @@ def restartUnhealthyServices(unhealthyTargetGroups):
       print 'Restarting unhealthy targets: ' + ",".join(instanceIds) + ', port number: ' + portNumber
       ssmApi.killProcessByPortNumber(instanceIds, portNumber)
     else:
-      raise ValueError('Could not find any unhealthy targets to restart!')
-    # Tags based approach      
-#     if len(instanceIds) > 0:
-#       tags = unhealthyTargetGroup['Tags']
-#       filteredTags = [tag for tag in tags if tag['Key'] == 'service-name']
-#       if (len(filteredTags) > 0):
-#         serviceName = filteredTags[0]['Value']
-#         print 'Restarting unhealthy targets: ' + ",".join(instanceIds) + ', service name: ' + serviceName
-#         ssmApi.restartService(instanceIds, serviceName)
+      print('Error: could not find any unhealthy targets to restart!')
   
 def handler(event, context): 
   snsMessages = parseEvent(event)
@@ -83,7 +69,7 @@ def handler(event, context):
     print(json.dumps(unhealthyTargets))
     restartUnhealthyServices(unhealthyTargets)
     alarmName = targetHealthGroup['AlarmName'].replace(alarmNamesPrefix, '')
-    print('Resetting alarm: {alarmName}'.format(alarmName=alarmName))
+    print('Resetting alarm state to "OK" for: {alarmName}'.format(alarmName=alarmName))
     cloudWatchApi.resetAlarmState(alarmName=alarmName)
   return unhealthyTargets
   

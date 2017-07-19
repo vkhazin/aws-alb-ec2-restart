@@ -22,5 +22,5 @@ def restartService(instanceIds, serviceName):
   return sendCommand(instanceIds, command)
 
 def killProcessByPortNumber(instanceIds, portNumber):
-  command = "sudo kill $(sudo ss -lptn 'sport = :{portNumber}' | grep '(?<=pid=)(\d*)(?=,)' -Po)".format(portNumber=portNumber)
+  command = "kill $(ss -lptn 'sport = :{portNumber}' | grep '(?<=pid=)(\d*)(?=,)' -Po)".format(portNumber=portNumber)
   return sendCommand(instanceIds, command)
