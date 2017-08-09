@@ -113,47 +113,47 @@
 ```
 [  
   {  
-		"UnhealthyTargets":[  
-			 {  
-					"HealthCheckPort":"3000",
-					"Target":{  
-						 "Id":"i-019ebfaf92631c228",
-						 "Port":3000
-					},
-					"TargetHealth":{  
-						 "State":"unhealthy",
-						 "Reason":"Target.ResponseCodeMismatch",
-						 "Description":"Health checks failed with these codes: [500]"
-					}
-			 },
-			 {  
-					"HealthCheckPort":"3000",
-					"Target":{  
-						 "Id":"i-0b314f9c31a99621c",
-						 "Port":3000
-					},
-					"TargetHealth":{  
-						 "State":"unhealthy",
-						 "Reason":"Target.ResponseCodeMismatch",
-						 "Description":"Health checks failed with these codes: [500]"
-					}
-			 }
-		],
-		"name":"TargetGroup",
-		"value":"targetgroup/smith-poc-nodejs-restart-tg/7c25fe0e5ca71022",
-		"Tags":[  
-			 {  
-					"Value":"nodejs-restart",
-					"Key":"service-name"
-			 }
-		]
+	"UnhealthyTargets":[  
+		 {  
+				"HealthCheckPort":"3000",
+				"Target":{  
+					 "Id":"i-019ebfaf92631c228",
+					 "Port":3000
+				},
+				"TargetHealth":{  
+					 "State":"unhealthy",
+					 "Reason":"Target.ResponseCodeMismatch",
+					 "Description":"Health checks failed with these codes: [500]"
+				}
+		 },
+		 {  
+				"HealthCheckPort":"3000",
+				"Target":{  
+					 "Id":"i-0b314f9c31a99621c",
+					 "Port":3000
+				},
+				"TargetHealth":{  
+					 "State":"unhealthy",
+					 "Reason":"Target.ResponseCodeMismatch",
+					 "Description":"Health checks failed with these codes: [500]"
+				}
+		 }
+	],
+	"name":"TargetGroup",
+	"value":"targetgroup/smith-poc-nodejs-restart-tg/7c25fe0e5ca71022",
+	"Tags":[  
+		 {  
+				"Value":"nodejs-restart",
+				"Key":"service-name"
+		 }
+	]
 	}
 ]
 ```
 * Using payload assembled from previous steps recycle execute send-command to each instance to restart service
 * [SSM Role for EC2 Instances](http://docs.aws.amazon.com/systems-manager/latest/userguide/sysman-configuring-access-policies.html)
 * EC2 Instances Role must include: AmazonEC2RoleforSSM policy
-* Lambda Exceution Role must include:  AmazonEC2FullAccess, CloudWatchLogsFullAccess, CloudWatchLogsForLambda, AmazonSSMFullAccess, CloudWatchEventsFullAccess policies
+* Lambda Execution Role must include:  AmazonEC2FullAccess, CloudWatchLogsFullAccess, CloudWatchLogsForLambda, AmazonSSMFullAccess, CloudWatchEventsFullAccess policies
 * [Installing SSM Agent](http://docs.aws.amazon.com/systems-manager/latest/userguide/ssm-agent.html#sysman-install-ssm-agent)
 * To validate configuration run:
 ```
