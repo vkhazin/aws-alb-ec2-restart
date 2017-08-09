@@ -6,7 +6,6 @@
 * SNS notification sent by CloudWatch Alarm is processed by Lambda function
 * Lambda function leverages SSM to send kill command to unhealthy ec2 instances
 * And repeat the process
-* 
 
 ## Flow ##
 
@@ -162,23 +161,23 @@ aws ssm describe-instance-information
 * Ouput will list instances with SSM agent installed and IAM Roles configured:
 ```
 cabox@box-codeanywhere:~/workspace$ aws ssm describe-instance-information
-	{
-		"InstanceInformationList": [
-			{
-				"IsLatestVersion": true,
-				"ComputerName": "ip-172-31-32-142.us-east-2.compute.internal",
-				"PingStatus": "Online",
-				"InstanceId": "i-0b314f9c31a99621c",
-				"IPAddress": "172.31.32.142",
-				"ResourceType": "EC2Instance",
-				"AgentVersion": "2.0.847.0",
-				"PlatformVersion": "7.2",
-				"PlatformName": "Red Hat Enterprise Linux Server",
-				"PlatformType": "Linux",
-				"LastPingDateTime": 1499986973.929
-			}
-		]
-	} 
+{
+  "InstanceInformationList": [
+    {
+      "IsLatestVersion": true,
+      "ComputerName": "ip-172-31-32-142.us-east-2.compute.internal",
+      "PingStatus": "Online",
+      "InstanceId": "i-0b314f9c31a99621c",
+      "IPAddress": "172.31.32.142",
+      "ResourceType": "EC2Instance",
+      "AgentVersion": "2.0.847.0",
+      "PlatformVersion": "7.2",
+      "PlatformName": "Red Hat Enterprise Linux Server",
+      "PlatformType": "Linux",
+      "LastPingDateTime": 1499986973.929
+    }
+  ]
+} 
 ```
 * [Send Command walkthrough](http://docs.aws.amazon.com/systems-manager/latest/userguide/walkthrough-cli.html)
 * [Disable require tty](https://www.shell-tips.com/2014/09/08/sudo-sorry-you-must-have-a-tty-to-run-sudo/)
